@@ -1,7 +1,9 @@
-const { app, ipcMain } = require('electron')
+let count = 0
 
-const timer = () => setInterval(() => {
-  ipcMain.send('message-channel', 'hello')
+const timer = (mainWindow) => setInterval(() => {
+  console.log('sending data ' + count)
+  mainWindow.send('message-channel', `hello ${count}`)
+  count++
 }, 1000)
 
-module.exports = timer
+export default timer

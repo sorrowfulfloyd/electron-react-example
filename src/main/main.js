@@ -2,8 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import timer from "./sender/sendData";
 
-function createWindow() {
+function main() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -34,12 +35,7 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
-  console.log("main window created")
-
-  setInterval(() => {
-    console.log("sending the message")
-    mainWindow.webContents.send('message-channel', 'hello from main')
-  }, 1000)
+  timer(mainWindow)
 }
 
 // This method will be called when Electron has finished
@@ -59,12 +55,12 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('hello', () => console.log('back'))
 
-  createWindow()
+  main()
 
-  app.on('activate', function () {
+  app.on('activate', function() {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) main()
   })
 })
 
